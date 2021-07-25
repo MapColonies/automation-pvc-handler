@@ -37,7 +37,7 @@ def copytree(src, dst, symlinks=True, ignore=None):
     """
     This method will make recursive copy process from folder to folder - FileSystem
     """
-    command = f'cp -r {src} {dst}'
+    command = f'cp -r {src}/. {dst}'
     os.system(command)
     # for item in os.listdir(src):
         # try:
