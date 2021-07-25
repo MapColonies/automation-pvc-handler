@@ -16,10 +16,10 @@ IMAGE_FULL_NAME=automation-test:$VERSION
 OUTPUT_DIR=/docker_images
 
 echo VERSION:$VERSION
-docker build --no-cache -t automation-test:$VERSION --build-arg VERSION=$VERSION .
+docker build --no-cache -t tester-pvc-server:$VERSION --build-arg VERSION=$VERSION .
 #docker build -t automation-test:$VERSION --build-arg VERSION=$VERSION .
 
-docker tag automation-test:$VERSION automation-test:latest
+docker tag automation-test:$VERSION tester-pvc-server:latest
 
 echo automation-test:$VERSION > ./docker_images/generated_dockers.txt
 
