@@ -38,18 +38,27 @@ def copytree(src, dst, symlinks=True, ignore=None):
     This method will make recursive copy process from folder to folder - FileSystem
     """
     for item in os.listdir(src):
-        try:
+        # try:
+        #
+        #     s = os.path.join(src, item)
+        #     d = os.path.join(dst, item)
+        #     # shutil.copymode(s, d)
+        #     if os.path.isdir(s):
+        #         shutil.copytree(s, d, symlinks, ignore)
+        #     else:
+        #
+        #         shutil.copy2(s, d)
+        # except Exception as e:
+        #     print(str(e))
 
             s = os.path.join(src, item)
             d = os.path.join(dst, item)
             # shutil.copymode(s, d)
             if os.path.isdir(s):
-                shutil.copytree(s, d, symlinks, ignore)
+                shutil.copytree(s, d, symlinks, ignore, copy_function=shutil.copy,)
             else:
 
-                shutil.copy2(s, d)
-        except Exception as e:
-            print(str(e))
+                shutil.copy(s, d)
 
 
 def copytree2(source_folder, destination_folder):
