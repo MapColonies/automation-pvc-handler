@@ -66,13 +66,23 @@ def change_shape_metadata():
 
     try:
         resp = executors.render_discrete_name(dest)
-        msg = json.dumps({'message': f'Source name changed into: {resp}','source':f'{resp}'})
+        msg = json.dumps({'message': f'Source name changed into: {resp}', 'source':f'{resp}'})
         return Response(msg, status=201, mimetype='application/json')
 
     except Exception as e:
         msg = json.dumps({'message': f'internal server error - {str(e)}'})
         return Response(msg, status=500, mimetype='application/json')
 
+
+@app.route('/')
+def start_page():
+    try:
+        msg = json.dumps({'message': 'main page of pvc handler for qa testing'})
+        return Response(msg, status=200, mimetype='application/json')
+
+    except Exception as e:
+        msg = json.dumps({'message': f'internal server error - {str(e)}'})
+        return Response(msg, status=500, mimetype='application/json')
 
 
 if __name__ == '__main__':
