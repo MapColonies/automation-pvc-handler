@@ -74,6 +74,26 @@ def change_shape_metadata():
         return Response(msg, status=500, mimetype='application/json')
 
 
+@app.route('/validatePath')
+def validate_path():
+    root = config.PV_ROOT_DIR
+    dest = config.PV_TEST_DIR_NAME
+    dest = os.path.join(root, dest)
+
+    try:
+        state, resp = executors.check_path(dest)
+        if state:
+            msg = json.dumps({'message': f'directory: {dest} include all relevant file', 'failure': False, 'json_data': resp})
+            return Response(msg, status=200, mimetype='application/json')
+        else:
+            msg = json.dumps({'message': f'directory: {dest} failed on validation', 'failure': True, 'json_data': resp})
+            return Response(msg, status=200, mimetype='application/json')
+
+    except Exception as e:
+        msg = json.dumps({'message': f'internal server error - {str(e)}'})
+        return Response(msg, status=500, mimetype='application/json')
+
+
 @app.route('/')
 def start_page():
     try:
@@ -86,4 +106,4 @@ def start_page():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5001)
