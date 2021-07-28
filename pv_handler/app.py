@@ -66,7 +66,7 @@ def change_shape_metadata():
 
     try:
         resp = executors.render_discrete_name(dest)
-        msg = json.dumps({'message': f'Source name changed into: {resp}', 'source':f'{resp}'})
+        msg = json.dumps({'message': f'Source name changed into: {resp}', 'source': f'{resp}'})
         return Response(msg, status=201, mimetype='application/json')
 
     except Exception as e:
