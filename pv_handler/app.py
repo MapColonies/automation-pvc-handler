@@ -88,6 +88,22 @@ def validate_path():
     dest = config.PV_TEST_DIR_NAME
     dest = os.path.join(root, dest)
 
+    response = _helper_path_validator(dest)
+    return response
+
+
+@app.route('/validateWatchPath')
+def validate_watch_path():
+    root = config.PV_ROOT_DIR
+    watch_dir = config.PV_WATCH_DIR
+    dest = config.PV_TEST_DIR_NAME
+    dest = os.path.join(root, watch_dir, dest)
+
+    response = _helper_path_validator(dest)
+    return response
+
+
+def _helper_path_validator(dest):
     try:
         state, resp = executors.check_path(dest)
         if state:
@@ -101,7 +117,6 @@ def validate_path():
     except Exception as e:
         msg = json.dumps({'message': f'internal server error - {str(e)}'})
         return Response(msg, status=500, mimetype='application/json')
-
 
 @app.route('/createWatchDir')
 def generate_watch_dir():
@@ -146,4 +161,4 @@ def _helper_copy_request(source, dest):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5001)
