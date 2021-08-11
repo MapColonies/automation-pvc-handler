@@ -118,6 +118,7 @@ def _helper_path_validator(dest):
         msg = json.dumps({'message': f'internal server error - {str(e)}'})
         return Response(msg, status=500, mimetype='application/json')
 
+
 @app.route('/createWatchDir')
 def generate_watch_dir():
     root = config.PV_ROOT_DIR
