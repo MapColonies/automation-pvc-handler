@@ -2,13 +2,15 @@ from flask import Flask
 from flask import Response
 from flask_healthz import healthz
 from flask_healthz import HealthError
-
+from mc_automation_tools import common
 app = Flask(__name__)
 app.register_blueprint(healthz, url_prefix="/healthz")
 from pv_executors import executors
 from configuration import config
 import os
 import json
+
+os.environ['RND_FOLDER_NAME'] = ""
 
 
 def printok():
@@ -45,7 +47,7 @@ def generate_new_test_dir():
 
     source = os.path.join(root, base)
     dest = os.path.join(root, dest)
-
+    os.environ['RND_FOLDER_NAME'] = ""
     response = _helper_copy_request(source, dest)
     return response
 
@@ -65,7 +67,7 @@ def change_watch_shape_metadata():
     root = config.PV_ROOT_DIR
     watch_dir = config.PV_WATCH_DIR
     dest = config.PV_TEST_DIR_NAME
-    dest = os.path.join(root, watch_dir, dest, 'Shapes', config.SHAPE_METADATA_NAME)
+    dest = os.path.join(root, watch_dir, dest,os.environ['RND_FOLDER_NAME'], 'Shapes', config.SHAPE_METADATA_NAME)
 
     response = _helper_name_changer(dest)
     return response
@@ -97,7 +99,7 @@ def validate_watch_path():
     root = config.PV_ROOT_DIR
     watch_dir = config.PV_WATCH_DIR
     dest = config.PV_TEST_DIR_NAME
-    dest = os.path.join(root, watch_dir, dest)
+    dest = os.path.join(root, watch_dir, dest, os.environ['RND_FOLDER_NAME'])
 
     response = _helper_path_validator(dest)
     return response
@@ -125,9 +127,9 @@ def generate_watch_dir():
     base = config.PV_BASE_DATA_DIR
     watch_dir = config.PV_WATCH_DIR
     dest = config.PV_TEST_DIR_NAME
-
+    os.environ['RND_FOLDER_NAME'] = common.generate_uuid()
     source = os.path.join(root, base)
-    dest = os.path.join(root, watch_dir, dest)
+    dest = os.path.join(root, watch_dir, dest, os.environ['RND_FOLDER_NAME'])
 
     response = _helper_copy_request(source, dest)
     return response
