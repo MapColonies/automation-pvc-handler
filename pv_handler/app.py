@@ -5,6 +5,7 @@ from flask_healthz import HealthError
 from mc_automation_tools import common
 app = Flask(__name__)
 app.register_blueprint(healthz, url_prefix="/healthz")
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from pv_executors import executors
 from configuration import config
 import os
@@ -148,9 +149,12 @@ def start_page():
 
 def _helper_copy_request(source, dest):
     try:
+        print('1')
         executors.create_new_test_dir(source, dest)
+        print('2')
         msg = json.dumps({'message': f'created copy of: {source} directory into: {dest}', 'source': f'{source}',
                           'newDesination': f'{dest}'})
+        print('3')
         return Response(msg, status=201, mimetype='application/json')
 
     except NotADirectoryError as e1:
@@ -161,7 +165,6 @@ def _helper_copy_request(source, dest):
     except Exception as e:
         msg = json.dumps({'message': f'internal server error - {str(e)}'})
         return Response(msg, status=500, mimetype='application/json')
-
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

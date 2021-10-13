@@ -12,17 +12,22 @@ def create_new_test_dir(source_data, dest_data):
     if os.path.exists(source_data):
         if os.environ['RND_FOLDER_NAME']:
             if os.path.exists(os.path.dirname(dest_data)):
+                print('4')
                 shutil.rmtree(os.path.dirname(dest_data))
         else:
             if os.path.exists(dest_data):
+                print('5')
                 shutil.rmtree(dest_data)
 
+        print('6')
         os.makedirs(dest_data)
+        print('7')
         # copy_tree(source_data, dest_data)
         copytree(source_data, dest_data)
+        print('8')
 
     else:
-        raise FileNotFoundError(f'Source directory not exists: [{source_data}]')
+        raise NotADirectoryError(f'Source directory not exists: [{source_data}]')
 
 
 def render_discrete_name(shape_metadata):
