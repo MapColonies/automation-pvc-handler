@@ -110,7 +110,7 @@
                 "required": [],
                 "properties": {
                   "type": {
-                    "type": "number"
+                    "type": "string"
                   },
                   "properties": {
                     "type": "object",
