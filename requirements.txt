@@ -6,3 +6,5 @@ flask-healthz
 setuptools_scm
 gunicorn
 pip install mc-discrete-kit>=0.0.3
+disc
+mc-discrete-kit
