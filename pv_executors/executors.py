@@ -109,10 +109,6 @@ def check_path(src):
                 os.path.join(ret_folder, file_name), ext)
             if not ret_extension_validation:
                 missing_set_files.append(missing)
-            # res = set(config.SHAPE_FILE_LIST).intersection(os.listdir(os.path.join(src, config.SHAPES_PATH)))
-            # if len(res) != len(config.SHAPE_FILE_LIST):
-            # return False, f'Path [{os.path.join(src, config.SHAPES_PATH)}] missing files:{set(config.SHAPE_FILE_LIST).symmetric_difference(set(config.SHAPE_FILE_LIST).intersection(os.listdir(os.path.join(src, config.SHAPES_PATH))))}'
-            # return False, f'Path [{os.path.join(ret_folder, file_name)}] missing files:{file_name}'
     if missing_set_files:
         return False, f'Path [{os.path.join(src, config.SHAPES_PATH)}] missing files:{set(missing_set_files)}'
 
