@@ -4,6 +4,4 @@ mc-automation-tools>=0.0.22
 setuptools~=50.3.2
 flask-healthz
 setuptools_scm
-gunicorn
-disc
 mc-discrete-kit
