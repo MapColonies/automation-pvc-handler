@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import Response
+from flask import Response, request
 from flask_healthz import healthz
 from flask_healthz import HealthError
 from mc_automation_tools import common
@@ -7,6 +7,7 @@ from mc_automation_tools import common
 app = Flask(__name__)
 app.register_blueprint(healthz, url_prefix="/healthz")
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from discrete_kit.functions import metadata_convertor
 from pv_executors import executors
 from configuration import config
 import os
@@ -123,6 +124,51 @@ def _helper_path_validator(dest):
         return Response(msg, status=500, mimetype='application/json')
 
 
+def _helper_max_zoom_change(dir, max_zoom):
+    """
+    :param dir: parent dir of all related tfw files
+    :param max_zoom: max zoom value to be updated on tfw
+    :return: response of the request - code and related message -json format
+    """
+
+    try:
+        resp = metadata_convertor.replace_discrete_resolution(dir, max_zoom)
+        state = all(d['success'] for d in resp)
+        if state:
+            msg = json.dumps(
+                {'message': f'All tfw files in directory: {dir} were changed', 'failure': False, 'json_data': resp})
+            return Response(msg, status=200, mimetype='application/json')
+        else:
+            msg = json.dumps(
+                {'message': f'failed update files on directory: {dir}', 'failure': True, 'json_data': resp})
+            return Response(msg, status=200, mimetype='application/json')
+
+    except Exception as e:
+        msg = json.dumps({'message': f'internal server error - {str(e)}'})
+        return Response(msg, status=500, mimetype='application/json')
+
+
+@app.route('/changeMaxZoom')
+def change_max_zoom_resolution():
+    max_zoom = request.args.get('max_zoom')
+    root = config.PV_ROOT_DIR
+    dest = config.PV_TEST_DIR_NAME
+    dest = os.path.join(root, dest)
+    response = _helper_max_zoom_change(dest, max_zoom)
+    return response
+
+
+@app.route('/changeWatchMaxZoom')
+def change_watch_max_zoom_resolution():
+    max_zoom = request.args.get('max_zoom')
+    root = config.PV_ROOT_DIR
+    watch_dir = config.PV_WATCH_DIR
+    dest = config.PV_TEST_DIR_NAME
+    dest = os.path.join(root, watch_dir, dest, os.environ['RND_FOLDER_NAME'])
+    response = _helper_max_zoom_change(dest, max_zoom)
+    return response
+
+
 @app.route('/createWatchDir')
 def generate_watch_dir():
     root = config.PV_ROOT_DIR
@@ -166,4 +212,4 @@ def _helper_copy_request(source, dest):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5001)
