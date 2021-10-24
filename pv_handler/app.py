@@ -131,6 +131,10 @@ def _helper_max_zoom_change(dir, max_zoom):
     :return: response of the request - code and related message -json format
     """
 
+    if not max_zoom:
+        msg = json.dumps(
+            {'message': "Bad Request", "failure": True, 'json_data': "most provide 'max_zoom' parameter on request'"})
+        return Response(msg, status=400, mimetype='application/json')
     try:
         resp = metadata_convertor.replace_discrete_resolution(dir, max_zoom)
         state = all(d['success'] for d in resp)
