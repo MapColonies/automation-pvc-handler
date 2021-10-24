@@ -120,7 +120,7 @@ def _helper_path_validator(dest):
             return Response(msg, status=200, mimetype='application/json')
 
     except Exception as e:
-        msg = json.dumps({'message': f'internal server error - {str(e)}'})
+        msg = json.dumps({'message': f'internal server error - {str(e)}', 'failure': True})
         return Response(msg, status=500, mimetype='application/json')
 
 
