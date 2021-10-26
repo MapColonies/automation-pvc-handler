@@ -69,9 +69,10 @@ def change_shape_metadata():
 def change_watch_shape_metadata():
     root = config.PV_ROOT_DIR
     watch_dir = config.PV_WATCH_DIR
-    dest = config.PV_TEST_DIR_NAME
-    dest = os.path.join(root, watch_dir, dest, os.environ['RND_FOLDER_NAME'], 'Shapes', config.SHAPE_METADATA_NAME)
-
+    # dest = config.PV_TEST_DIR_NAME
+    dest =os.environ['RND_FOLDER_NAME']
+    # dest = os.path.join(root, watch_dir, dest, os.environ['RND_FOLDER_NAME'], 'Shapes', config.SHAPE_METADATA_NAME)
+    dest = os.path.join(root, watch_dir, dest, 'Shapes', config.SHAPE_METADATA_NAME)
     response = _helper_name_changer(dest)
     return response
 
@@ -101,8 +102,10 @@ def validate_path():
 def validate_watch_path():
     root = config.PV_ROOT_DIR
     watch_dir = config.PV_WATCH_DIR
-    dest = config.PV_TEST_DIR_NAME
-    dest = os.path.join(root, watch_dir, dest, os.environ['RND_FOLDER_NAME'])
+    # dest = config.PV_TEST_DIR_NAME
+    dest = os.environ['RND_FOLDER_NAME']
+    # dest = os.path.join(root, watch_dir, dest, os.environ['RND_FOLDER_NAME'])
+    dest = os.path.join(root, watch_dir, dest)
 
     response = _helper_path_validator(dest)
     return response
@@ -167,8 +170,11 @@ def change_watch_max_zoom_resolution():
     max_zoom = request.args.get('max_zoom')
     root = config.PV_ROOT_DIR
     watch_dir = config.PV_WATCH_DIR
-    dest = config.PV_TEST_DIR_NAME
-    dest = os.path.join(root, watch_dir, dest, os.environ['RND_FOLDER_NAME'])
+    # dest = config.PV_TEST_DIR_NAME
+    dest = os.environ['RND_FOLDER_NAME']
+    # dest = os.path.join(root, watch_dir, dest, os.environ['RND_FOLDER_NAME'])
+    dest = os.path.join(root, watch_dir, dest)
+
     response = _helper_max_zoom_change(dest, max_zoom)
     return response
 
@@ -178,10 +184,12 @@ def generate_watch_dir():
     root = config.PV_ROOT_DIR
     base = config.PV_BASE_DATA_DIR
     watch_dir = config.PV_WATCH_DIR
-    dest = config.PV_TEST_DIR_NAME
+    # dest = config.PV_TEST_DIR_NAME
     os.environ['RND_FOLDER_NAME'] = common.generate_uuid()
+    dest = os.environ['RND_FOLDER_NAME']
     source = os.path.join(root, base)
-    dest = os.path.join(root, watch_dir, dest, os.environ['RND_FOLDER_NAME'])
+    # dest = os.path.join(root, watch_dir, dest, os.environ['RND_FOLDER_NAME'])
+    dest = os.path.join(root, watch_dir, dest)
 
     response = _helper_copy_request(source, dest)
     return response
