@@ -138,6 +138,10 @@ def _helper_max_zoom_change(dir, max_zoom):
         msg = json.dumps(
             {'message': "Bad Request", "failure": True, 'json_data': "most provide 'max_zoom' parameter on request'"})
         return Response(msg, status=400, mimetype='application/json')
+    if not os.path.exists(dir) or not os.listdir(dir):
+        msg = json.dumps(
+            {'message': "Directory not found / Empty directory", "failure": True, 'json_data': "Directory not found / Empty directory"})
+        return Response(msg, status=409, mimetype='application/json')
     try:
         resp = metadata_convertor.replace_discrete_resolution(dir, max_zoom)
         state = all(d['success'] for d in resp)
@@ -148,7 +152,7 @@ def _helper_max_zoom_change(dir, max_zoom):
         else:
             msg = json.dumps(
                 {'message': f'failed update files on directory: {dir}', 'failure': True, 'json_data': resp})
-            return Response(msg, status=200, mimetype='application/json')
+            return Response(msg, status=409, mimetype='application/json')
 
     except Exception as e:
         msg = json.dumps({'message': f'internal server error - {str(e)}'})
