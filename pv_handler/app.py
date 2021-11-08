@@ -214,7 +214,7 @@ def _helper_copy_request(source, dest):
     try:
         executors.create_new_test_dir(source, dest)
         msg = json.dumps({'message': f'created copy of: {source} directory into: {dest}', 'source': f'{source}',
-                          'newDestination': f'{dest}'})
+                          'newDesination': f'{dest}'})
         return Response(msg, status=201, mimetype='application/json')
 
     except NotADirectoryError as e1:
