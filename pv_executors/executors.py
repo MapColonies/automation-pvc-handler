@@ -129,7 +129,7 @@ def check_path(src):
     if json_object_res.created_json is not None:
         return True, json_object_res.created_json
     else:
-        return False, validate_json_types(json_object_res.get_json_output())
+        return False, "Created JSON is None (Empty)"
 
 
 def find_if_folder_exists(directory, folder_to_check):
