@@ -70,7 +70,7 @@ def change_watch_shape_metadata():
     root = config.PV_ROOT_DIR
     watch_dir = config.PV_WATCH_DIR
     # dest = config.PV_TEST_DIR_NAME
-    dest =os.environ['RND_FOLDER_NAME']
+    dest = os.environ['RND_FOLDER_NAME']
     # dest = os.path.join(root, watch_dir, dest, os.environ['RND_FOLDER_NAME'], 'Shapes', config.SHAPE_METADATA_NAME)
     dest = os.path.join(root, watch_dir, dest, 'Shapes', config.SHAPE_METADATA_NAME)
     response = _helper_name_changer(dest)
@@ -123,7 +123,7 @@ def _helper_path_validator(dest):
             return Response(msg, status=200, mimetype='application/json')
 
     except Exception as e:
-        msg = json.dumps({'message': f'internal server error - {str(e)}'})
+        msg = json.dumps({'message': f'internal server error - {str(e)}', 'failure': True})
         return Response(msg, status=500, mimetype='application/json')
 
 
@@ -140,7 +140,8 @@ def _helper_max_zoom_change(dir, max_zoom):
         return Response(msg, status=400, mimetype='application/json')
     if not os.path.exists(dir) or not os.listdir(dir):
         msg = json.dumps(
-            {'message': "Directory not found / Empty directory", "failure": True, 'json_data': "Directory not found / Empty directory"})
+            {'message': "Directory not found / Empty directory", "failure": True,
+             'json_data': "Directory not found / Empty directory"})
         return Response(msg, status=409, mimetype='application/json')
     try:
         resp = metadata_convertor.replace_discrete_resolution(dir, max_zoom)

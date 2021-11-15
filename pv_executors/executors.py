@@ -1,6 +1,11 @@
 """This module include all core manipulation for server"""
 import os
 import shutil
+from pathlib import Path
+import discrete_kit.configuration.config
+import jsonschema.validators
+from discrete_kit.functions.shape_functions import *
+from discrete_kit.validator.schema_validator import *
 from configuration import config
 from mc_automation_tools import common
 from mc_automation_tools import shape_convertor
@@ -85,22 +90,58 @@ def copytree2(source_folder, destination_folder):
 
 def check_path(src):
     """This module validate source directory is valid for ingestion process"""
+    missing_set_files = []
     if not os.path.exists(src):
         return False, f'Path [{src}] not exists'
 
-    if not os.path.exists(os.path.join(src, config.SHAPES_PATH)):
+    # if not os.path.exists(os.path.join(src, config.SHAPES_PATH)):
+    #     return False, f'Path [{os.path.join(src, config.SHAPES_PATH)}] not exists'
+    if not find_if_folder_exists(src, config.SHAPES_PATH):
         return False, f'Path [{os.path.join(src, config.SHAPES_PATH)}] not exists'
 
-    if not os.path.exists(os.path.join(src, config.TIFF_PATH)):
+    if not find_if_folder_exists(src, config.TIFF_PATH):
         return False, f'Path [{os.path.join(src, config.TIFF_PATH)}] not exists'
 
-    res = set(config.SHAPE_FILE_LIST).intersection(os.listdir(os.path.join(src, config.SHAPES_PATH)))
-    if len(res) != len(config.SHAPE_FILE_LIST):
-        return False, f'Path [{os.path.join(src, config.SHAPES_PATH)}] missing files:{set(config.SHAPE_FILE_LIST).symmetric_difference(set(config.SHAPE_FILE_LIST).intersection(os.listdir(os.path.join(src, config.SHAPES_PATH))))}'
+    ret_folder = get_folder_path_by_name(src, config.SHAPES_PATH)
+    for file_name in discrete_kit.configuration.config.files_names:
+        for ext in discrete_kit.configuration.config.files_extension_list:
+            ret_extension_validation, missing = discrete_kit.configuration.config.validate_ext_files_exists(
+                os.path.join(ret_folder, file_name), ext)
+            if not ret_extension_validation:
+                missing_set_files.append(missing)
+    if missing_set_files:
+        return False, f'Path [{os.path.join(src, config.SHAPES_PATH)}] missing files:{set(missing_set_files)}'
 
-    shape_metadata_shp = shape_convertor.shp_to_geojson(os.path.join(src, config.SHAPES_PATH, 'ShapeMetadata.shp'))
-    Product_shp = shape_convertor.shp_to_geojson(os.path.join(src, config.SHAPES_PATH, 'Product.shp'))
-    Files_shp = shape_convertor.shp_to_geojson(os.path.join(src, config.SHAPES_PATH, 'Files.shp'))
-    img_path = os.path.join(src, config.TIFF_PATH)
-    res = shape_convertor.generate_oversear_request(shape_metadata_shp, Product_shp, Files_shp, img_path)
-    return True, res
+    json_object_res = ShapeToJSON(ret_folder)
+    try:
+        with open(Path(Path(__file__).resolve()).parent.parent / 'jsons/shape_file.json', 'w', encoding='utf-8') as f:
+            json.dump(json.loads(json_object_res.get_json_output()), f, ensure_ascii=False)
+    except IOError:
+        return False, "Cannot write json file to run validation on schema."
+    dir_name = os.path.dirname(__file__)
+    dir_name = Path(Path(dir_name).resolve()).parent
+    full_path = os.path.join(dir_name, discrete_kit.configuration.config.SCHEMA_FOLDER,
+                             discrete_kit.configuration.config.JSON_NAME)
+    schema_file = open(full_path, 'r')
+    schema_data_to_comp = json.load(schema_file)
+    # if validate_json_types(schema_data_to_comp,
+    #                        json_object_res.get_json_output()) is None:
+    if json_object_res.created_json is not None:
+        return True, json_object_res.created_json
+    else:
+        return False, "Created JSON is None (Empty)"
+
+
+def find_if_folder_exists(directory, folder_to_check):
+    os.walk(directory)
+    directory_lists = [x[0] for x in os.walk(directory)]
+    for current_dir in directory_lists:
+        if folder_to_check in current_dir:
+            return True
+    return False
+
+
+def get_folder_path_by_name(path, name):
+    p_walker = [x[0] for x in os.walk(path)]
+    path = ("\n".join(s for s in p_walker if name.lower() in s.lower()))
+    return path
