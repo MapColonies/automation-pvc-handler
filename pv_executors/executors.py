@@ -113,17 +113,17 @@ def check_path(src):
         return False, f'Path [{os.path.join(src, config.SHAPES_PATH)}] missing files:{set(missing_set_files)}'
 
     json_object_res = ShapeToJSON(ret_folder)
-    try:
-        with open(Path(Path(__file__).resolve()).parent.parent / 'jsons/shape_file.json', 'w', encoding='utf-8') as f:
-            json.dump(json.loads(json_object_res.get_json_output()), f, ensure_ascii=False)
-    except IOError:
-        return False, "Cannot write json file to run validation on schema."
-    dir_name = os.path.dirname(__file__)
-    dir_name = Path(Path(dir_name).resolve()).parent
-    full_path = os.path.join(dir_name, discrete_kit.configuration.config.SCHEMA_FOLDER,
-                             discrete_kit.configuration.config.JSON_NAME)
-    schema_file = open(full_path, 'r')
-    schema_data_to_comp = json.load(schema_file)
+    # try:
+    #     with open(Path(Path(__file__).resolve()).parent.parent / 'jsons/shape_file.json', 'w', encoding='utf-8') as f:
+    #         json.dump(json.loads(json_object_res.get_json_output()), f, ensure_ascii=False)
+    # except IOError:
+    #     return False, "Cannot write json file to run validation on schema."
+    # dir_name = os.path.dirname(__file__)
+    # dir_name = Path(Path(dir_name).resolve()).parent
+    # full_path = os.path.join(dir_name, discrete_kit.configuration.config.SCHEMA_FOLDER,
+    #                          discrete_kit.configuration.config.JSON_NAME)
+    # schema_file = open(full_path, 'r')
+    # schema_data_to_comp = json.load(schema_file)
     # if validate_json_types(schema_data_to_comp,
     #                        json_object_res.get_json_output()) is None:
     if json_object_res.created_json is not None:
