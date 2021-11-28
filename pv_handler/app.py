@@ -49,7 +49,7 @@ def generate_new_test_dir():
     dest = config.PV_TEST_DIR_NAME
 
     source = os.path.join(root, base)
-    dest = os.path.join(root, dest)
+    dest = os.path.join(root, config.PV_WATCH_DIR, dest)
     os.environ['RND_FOLDER_NAME'] = ""
     response = _helper_copy_request(source, dest)
     return response
@@ -59,7 +59,7 @@ def generate_new_test_dir():
 def change_shape_metadata():
     root = config.PV_ROOT_DIR
     dest = config.PV_TEST_DIR_NAME
-    dest = os.path.join(root, dest, 'Shapes', config.SHAPE_METADATA_NAME)
+    dest = os.path.join(root, config.PV_WATCH_DIR, dest, 'Shapes', config.SHAPE_METADATA_NAME)
 
     response = _helper_name_changer(dest)
     return response
@@ -92,7 +92,7 @@ def _helper_name_changer(dest):
 def validate_path():
     root = config.PV_ROOT_DIR
     dest = config.PV_TEST_DIR_NAME
-    dest = os.path.join(root, dest)
+    dest = os.path.join(root, config.PV_WATCH_DIR, dest)
 
     response = _helper_path_validator(dest)
     return response
@@ -165,7 +165,7 @@ def change_max_zoom_resolution():
     max_zoom = request.args.get('max_zoom')
     root = config.PV_ROOT_DIR
     dest = config.PV_TEST_DIR_NAME
-    dest = os.path.join(root, dest)
+    dest = os.path.join(root, config.PV_WATCH_DIR, dest)
     response = _helper_max_zoom_change(dest, max_zoom)
     return response
 
