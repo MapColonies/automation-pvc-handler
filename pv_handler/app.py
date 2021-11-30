@@ -132,6 +132,8 @@ def validate_watch_path():
     response = _helper_path_validator(dest)
     return response
 
+    # a
+
 
 def _helper_path_validator(dest):
     try:
