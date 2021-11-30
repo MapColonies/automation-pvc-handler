@@ -12,6 +12,13 @@ from mc_automation_tools import shape_convertor
 from stat import *
 
 
+def delete_test_dir(dest):
+    if os.path.exists(dest):
+        shutil.rmtree(dest)
+    else:
+        raise NotADirectoryError(f'Failed to delete directory because it doesnt exists: [{dest}]')
+
+
 def create_new_test_dir(source_data, dest_data):
     """This method copy base data dir to new dir"""
     if os.path.exists(source_data):

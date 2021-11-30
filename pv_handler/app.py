@@ -42,6 +42,17 @@ app.config.update(
 )
 
 
+@app.route('/deleteTestDir')
+def delete_test_dir():
+    root = config.PV_ROOT_DIR
+    base = config.PV_BASE_DATA_DIR
+    dest = config.PV_TEST_DIR_NAME
+
+    dest = os.path.join(root, config.PV_WATCH_DIR, dest)
+    response = _helper_delete_folder(dest)
+    return response
+
+
 @app.route('/createTestDir')
 def generate_new_test_dir():
     root = config.PV_ROOT_DIR
@@ -75,6 +86,17 @@ def change_watch_shape_metadata():
     dest = os.path.join(root, watch_dir, dest, 'Shapes', config.SHAPE_METADATA_NAME)
     response = _helper_name_changer(dest)
     return response
+
+
+def _helper_delete_folder(dest):
+    try:
+        executors.delete_test_dir(dest)
+        msg = json.dumps({'message': f'{dest} folder deleted successfully'})
+        return Response(msg, status=200, mimetype='application/json')
+
+    except Exception as e:
+        msg = json.dumps({'message': f'internal server error - {str(e)}'})
+        return Response(msg, status=500, mimetype='application/json')
 
 
 def _helper_name_changer(dest):
