@@ -12,7 +12,7 @@ fi
 
 
 VERSION=$(python setup.py --version | sed 's/+/./g')
-IMAGE_FULL_NAME=automation-test:$VERSION
+IMAGE_FULL_NAME=tester-pvc-server::$VERSION
 OUTPUT_DIR=/docker_images
 
 echo VERSION:$VERSION
@@ -30,6 +30,6 @@ DUMP_OUTPUT_PATH=${OUTPUT_DIR}/releases/${FILE_NAME}
 
 if [[ ! -z "${DUMP_IMAGE}" ]]
 then
-     docker save -o ./${DUMP_OUTPUT_PATH} automation-test:$VERSION
+     docker save -o ./${DUMP_OUTPUT_PATH} tester-pvc-server::$VERSION
      echo Saved docker image file into:${DUMP_OUTPUT_PATH}
 fi
