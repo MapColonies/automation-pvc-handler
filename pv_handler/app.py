@@ -46,7 +46,6 @@ app.config.update(
 def delete_test_dir():
     folder_name = request.args.get("folder")
     root = config.PV_ROOT_DIR
-    base = config.PV_BASE_DATA_DIR
     # dest = config.PV_TEST_DIR_NAME
     # dest = config.PV_TEST_DIR_NAME
 
@@ -60,9 +59,18 @@ def delete_file_from_folder():
     folder_name = request.args.get('folder')
     file_name = request.args.get('file')
     root = config.PV_ROOT_DIR
-    base = config.PV_BASE_DATA_DIR
     dest = os.path.join(root, config.PV_WATCH_DIR, folder_name)
     response = _helper_delete_file_from_folder(dest, file_name)
+    return response
+
+
+@app.route('/createMockFile', methods=['GET'])
+def create_mock_file():
+    folder_name = request.args.get('folder')
+    file_name = request.args.get('file')
+    root = config.PV_ROOT_DIR
+    dest = os.path.join(root, config.PV_WATCH_DIR, folder_name)
+    response = _helper_create_mock(dest, file_name)
     return response
 
 
@@ -105,6 +113,17 @@ def _helper_delete_file_from_folder(dest, filename):
     try:
         executors.delete_file_from_dir(dest, filename)
         msg = json.dumps({'message': f'{filename} from {dest}  deleted successfully'})
+        return Response(msg, status=200, mimetype='application/json')
+
+    except Exception as e:
+        msg = json.dumps({'message': f'internal server error - {str(e)}'})
+        return Response(msg, status=500, mimetype='application/json')
+
+
+def _helper_create_mock(dest, file_name):
+    try:
+        executors.create_mock_file(dest, file_name)
+        msg = json.dumps({'message': f'{file_name} from {dest}  created successfully'})
         return Response(msg, status=200, mimetype='application/json')
 
     except Exception as e:

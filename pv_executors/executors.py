@@ -23,6 +23,17 @@ def delete_file_from_dir(path_to_folder, file_to_delete):
         raise Exception(f'error occurred , msg : {str(e)}')
 
 
+def create_mock_file(path_to_folder, file_to_create):
+    ret_folder = glob.glob(path_to_folder + "/**/" + file_to_create, recursive=True)
+    if not ret_folder:
+        raise Exception(f'{file_to_create} not found in {path_to_folder}')
+    try:
+        for folder in ret_folder:
+            os.remove(folder)
+            Path(folder).touch()
+    except OSError as e:
+        raise Exception(f'error occurred , msg : {str(e)}')
+
 def delete_test_dir(dest):
     if os.path.exists(dest):
         shutil.rmtree(dest)
