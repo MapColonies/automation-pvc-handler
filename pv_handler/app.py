@@ -87,6 +87,16 @@ def generate_new_test_dir():
     return response
 
 
+@app.route('/copyFile', methods=['GET'])
+def copy_file_to_folder():
+    folder_name = request.args.get("folder")
+    root = config.PV_ROOT_DIR  # /LayerSources
+    source = os.path.join(root, config.GEOPACKAGE_FOLDER)  
+    dest = os.path.join(root, config.PV_WATCH_DIR, folder_name)
+    response = _helper_copy_request(source, dest)
+    return response
+
+
 @app.route('/updateShape')
 def change_shape_metadata():
     root = config.PV_ROOT_DIR

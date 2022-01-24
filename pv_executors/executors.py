@@ -34,6 +34,7 @@ def create_mock_file(path_to_folder, file_to_create):
     except OSError as e:
         raise Exception(f'error occurred , msg : {str(e)}')
 
+
 def delete_test_dir(dest):
     if os.path.exists(dest):
         shutil.rmtree(dest)
