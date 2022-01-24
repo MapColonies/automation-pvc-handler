@@ -89,10 +89,11 @@ def generate_new_test_dir():
 
 @app.route('/copyFile', methods=['GET'])
 def copy_file_to_folder():
-    folder_name = request.args.get("folder")
+    folder_name_src = request.args.get("src")
+    folder_name_dest = request.args.get("dest")
     root = config.PV_ROOT_DIR  # /LayerSources
-    source = os.path.join(root, config.GEOPACKAGE_FOLDER)  
-    dest = os.path.join(root, config.PV_WATCH_DIR, folder_name)
+    source = os.path.join(root, folder_name_src)
+    dest = os.path.join(root, config.PV_WATCH_DIR, folder_name_dest)
     response = _helper_copy_request(source, dest)
     return response
 
