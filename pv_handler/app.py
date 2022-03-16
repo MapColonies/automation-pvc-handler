@@ -3,6 +3,7 @@ from flask import Response, request
 from flask_healthz import healthz
 from flask_healthz import HealthError
 from mc_automation_tools import common
+from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
 app.register_blueprint(healthz, url_prefix="/healthz")
@@ -74,8 +75,13 @@ def create_mock_file():
     return response
 
 
-@app.route('/createTestDir')
+@app.route('/createTestDir', methods=['GET'])
 def generate_new_test_dir():
+    delete_str = request.args.get('delete')
+    if delete_str:
+        delete_flag = True
+    else:
+        delete_flag = False
     root = config.PV_ROOT_DIR
     base = config.PV_BASE_DATA_DIR
     dest = config.PV_TEST_DIR_NAME
@@ -83,7 +89,7 @@ def generate_new_test_dir():
     source = os.path.join(root, base)
     dest = os.path.join(root, config.PV_WATCH_DIR, dest)
     os.environ['RND_FOLDER_NAME'] = ""
-    response = _helper_copy_request(source, dest)
+    response = _helper_copy_request(source, dest, not delete_flag)
     return response
 
 
@@ -278,6 +284,19 @@ def generate_watch_dir():
     return response
 
 
+@app.route('/api/docs')
+def get_docs():
+    print('sending docs')
+    return render_template('swaggerui.html')
+
+
+@app.route('/api')
+def get_api():
+    hello_dict = {'en': 'Hello', 'es': 'Hola'}
+    lang = request.args.get('lang')
+    return jsonify(hello_dict[lang])
+
+
 @app.route('/')
 def start_page():
     try:
@@ -289,9 +308,20 @@ def start_page():
         return Response(msg, status=500, mimetype='application/json')
 
 
-def _helper_copy_request(source, dest):
+"""====================================       NEW          ===================================="""
+"""====================================       NEW          ===================================="""
+"""====================================       NEW          ===================================="""
+"""====================================       NEW          ===================================="""
+"""====================================       NEW          ===================================="""
+"""====================================       NEW          ===================================="""
+"""====================================       NEW          ===================================="""
+"""====================================       NEW          ===================================="""
+"""====================================       NEW          ===================================="""
+
+
+def _helper_copy_request(source, dest, delete_flag=True):
     try:
-        executors.create_new_test_dir(source, dest)
+        executors.create_new_test_dir(source, dest, delete_flag)
         msg = json.dumps({'message': f'created copy of: {source} directory into: {dest}', 'source': f'{source}',
                           'newDesination': f'{dest}'})
         return Response(msg, status=201, mimetype='application/json')
@@ -307,4 +337,4 @@ def _helper_copy_request(source, dest):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5009)

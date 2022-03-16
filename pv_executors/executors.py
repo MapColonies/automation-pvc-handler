@@ -42,15 +42,17 @@ def delete_test_dir(dest):
         raise NotADirectoryError(f'Failed to delete directory because it doesnt exists: [{dest}]')
 
 
-def create_new_test_dir(source_data, dest_data):
+def create_new_test_dir(source_data, dest_data, delete_flag=True):
     """This method copy base data dir to new dir"""
     if os.path.exists(source_data):
         if os.environ['RND_FOLDER_NAME']:
             if os.path.exists(os.path.dirname(dest_data)):
-                shutil.rmtree(os.path.dirname(dest_data))
+                if delete_flag:
+                    shutil.rmtree(os.path.dirname(dest_data))
         else:
             if os.path.exists(dest_data):
-                shutil.rmtree(dest_data)
+                if delete_flag:
+                    shutil.rmtree(dest_data)
 
         os.makedirs(dest_data)
         # copy_tree(source_data, dest_data)
