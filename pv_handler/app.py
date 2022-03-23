@@ -46,10 +46,11 @@ app.config.update(
 @app.route('/deleteTestDir', methods=['GET'])
 def delete_test_dir():
     folder_name = request.args.get("folder")
+    if folder_name is None:
+        return jsonify("Please provide folder parameter")
     root = config.PV_ROOT_DIR
     # dest = config.PV_TEST_DIR_NAME
     # dest = config.PV_TEST_DIR_NAME
-
     dest = os.path.join(root, config.PV_WATCH_DIR, folder_name)
     response = _helper_delete_folder(dest)
     return response
@@ -73,7 +74,6 @@ def create_mock_file():
     dest = os.path.join(root, config.PV_WATCH_DIR, folder_name)
     response = _helper_create_mock(dest, file_name)
     return response
-
 
 
 @app.route('/createTestDir', methods=['GET'])
@@ -174,12 +174,14 @@ def _helper_name_changer(dest):
         return Response(msg, status=500, mimetype='application/json')
 
 
-@app.route('/validatePath')
+@app.route('/validatePath', methods=['GET'])
 def validate_path():
+    folder_name_src = request.args.get("folder")
     root = config.PV_ROOT_DIR
     dest = config.PV_TEST_DIR_NAME
     dest = os.path.join(root, config.PV_WATCH_DIR, dest)
-
+    if folder_name_src is not None:
+        dest = os.path.join(root, config.PV_WATCH_DIR, folder_name_src)
     response = _helper_path_validator(dest)
     return response
 
@@ -296,9 +298,9 @@ def get_docs():
 
 @app.route('/api')
 def get_api():
-    hello_dict = {'en': 'Hello', 'es': 'Hola'}
-    lang = request.args.get('lang')
-    return jsonify(hello_dict[lang])
+    # hello_dict = {'en': 'Hello', 'es': 'Hola'}
+    # lang = request.args.get('lang')
+    return jsonify("hi")
 
 
 @app.route('/')
@@ -341,4 +343,4 @@ def _helper_copy_request(source, dest, delete_flag=True):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=9000)
