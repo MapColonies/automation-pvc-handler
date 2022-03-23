@@ -78,6 +78,7 @@ def create_mock_file():
 @app.route('/createTestDir', methods=['GET'])
 def generate_new_test_dir():
     delete_str = request.args.get('delete')
+    folder_name = request.args.get('name')
     if delete_str:
         delete_flag = True
     else:
@@ -89,6 +90,8 @@ def generate_new_test_dir():
     source = os.path.join(root, base)
     dest = os.path.join(root, config.PV_WATCH_DIR, dest)
     os.environ['RND_FOLDER_NAME'] = ""
+    if folder_name:
+        dest = os.path.join(root, config.PV_WATCH_DIR, folder_name)
     response = _helper_copy_request(source, dest, not delete_flag)
     return response
 
@@ -338,4 +341,3 @@ def _helper_copy_request(source, dest, delete_flag=True):
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
-
