@@ -1,0 +1,102 @@
+{{- if .Values.testDataHandler.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "discrete-ingestion-qa.fullname" . }}-test-data-handler-configmap
+  labels:
+    app: {{ template "discrete-ingestion-qa.name" . }}
+    component: discrete-test-data-handler
+    environment: {{ .Values.environment }}
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.testDataHandler.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "discrete-ingestion-qa.name" . }}
+      release: {{ .Release.Name }}
+      run: {{ .Release.Name }}-test-data-handler
+  template:
+    metadata:
+      labels:
+        app: {{ template "discrete-ingestion-qa.name" . }}
+        release: {{ .Release.Name }}
+        run: {{ .Release.Name }}-test-data-handler
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.pullSecretName }}
+      volumes:
+      - name: ingestion-storage
+        persistentVolumeClaim:
+          claimName: {{ .Values.storage.pvcName }}
+      containers:
+        - name: {{ .Chart.Name }}-test-data-handler
+          image: "{{ .Values.testDataHandler.image }}:{{ .Values.testDataHandler.imageTag }}"
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz/live
+              port: 9000
+            initialDelaySeconds: 30
+            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /healthz/ready
+              port: 9000
+            initialDelaySeconds: 30
+            timeoutSeconds: 1
+          volumeMounts: 
+            - name: ingestion-storage
+              mountPath: /layerSources
+              {{- if .Values.storage.subPath }}
+              subPath: {{ .Values.storage.subPath }}
+              {{- end }}
+          {{- if .Values.testDataHandler.resources.enabled -}}
+          resources:
+            requests:
+              memory: {{ .Values.testDataHandler.resources.requests.memory }}
+              cpu: {{ .Values.testDataHandler.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.testDataHandler.resources.limits.memory }}
+              cpu: {{ .Values.testDataHandler.resources.limits.cpu }}
+          {{- end }}
+          env:
+            - name: PV_ROOT_DIR
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "discrete-ingestion-qa.fullname" . }}-test-data-handler-configmap
+                  key: PV_ROOT_DIR
+            - name: PV_BASE_DATA_DIR
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "discrete-ingestion-qa.fullname" . }}-test-data-handler-configmap
+                  key: PV_BASE_DATA_DIR
+            - name: PV_TEST_DIR_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "discrete-ingestion-qa.fullname" . }}-test-data-handler-configmap
+                  key: PV_TEST_DIR_NAME
+            - name: SHAPE_METADATA_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "discrete-ingestion-qa.fullname" . }}-test-data-handler-configmap
+                  key: SHAPE_METADATA_NAME
+            - name: SHAPES_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "discrete-ingestion-qa.fullname" . }}-test-data-handler-configmap
+                  key: SHAPES_PATH
+            - name: TIFF_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "discrete-ingestion-qa.fullname" . }}-test-data-handler-configmap
+                  key: TIFF_PATH
+            - name: PV_WATCH_DIR
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "discrete-ingestion-qa.fullname" . }}-test-data-handler-configmap
+                  key: PV_WATCH_DIR
+{{- end -}}

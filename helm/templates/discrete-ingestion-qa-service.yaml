@@ -1,0 +1,37 @@
+{{- if .Values.testDataHandler.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "discrete-ingestion-qa.fullname" . }}-test-data-handler
+  labels:
+    app: {{ template "discrete-ingestion-qa.name" . }}
+    component: discrete-test-data-handler-service
+    environment: {{ .Values.environment }}
+    release: {{ .Release.Name }}
+  {{- if eq .Values.cloudProvider "azure" }}
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "300"
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+  {{- end }}
+spec:
+  # In case cloudProvider=azure
+  {{- if eq .Values.cloudProvider "azure" }}
+  type: ClusterIP
+  {{- end }}
+  # In case cloudProvider=minikube
+  {{- if eq .Values.cloudProvider "minikube" }}
+  type: NodePort
+  {{- end }}
+  ports:
+    - port: 80
+      targetPort: 9000
+      protocol: TCP
+      name: http
+      {{- if eq .Values.cloudProvider "minikube" }}
+      nodePort: {{ .Values.testDataHandler.NODE_PORT }}
+      {{- end }}
+  selector:
+    app: {{ template "discrete-ingestion-qa.name" . }}
+    release: {{ .Release.Name }}
+    run: {{ .Release.Name }}-test-data-handler
+{{- end }}

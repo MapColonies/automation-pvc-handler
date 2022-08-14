@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "PVC Handler",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    },
+    "description": "An API to handle PVC routes"
+  },
+  "paths": {
+    "/deleteTestDir": {
+      "get": {
+        "tags": [
+          "Delete test folder"
+        ],
+        "description": "Deletes folder from pvc",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "folder",
+            "required": false,
+            "description": "enter folder to delete",
+            "schema": {
+              "type": "string",
+              "example": "watch/"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get response if folder deleted",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "folder deleted"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "err",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "failed to delete"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

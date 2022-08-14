@@ -1,0 +1,19 @@
+{{- if .Values.testDataHandler.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "discrete-ingestion-qa.fullname" . }}-test-data-handler-configmap
+  labels:
+    app: {{ template "discrete-ingestion-qa.name" . }}
+    component: discrete-test-data-handler-configmap
+    environment: {{ .Values.environment }}
+    release: {{ .Release.Name }}
+data:
+  PV_ROOT_DIR: {{ quote .Values.testDataHandler.env.PV_ROOT_DIR }}
+  PV_BASE_DATA_DIR: {{ quote .Values.testDataHandler.env.PV_BASE_DATA_DIR }}
+  PV_TEST_DIR_NAME: {{ quote .Values.testDataHandler.env.PV_TEST_DIR_NAME }}
+  SHAPE_METADATA_NAME: {{ quote .Values.testDataHandler.env.SHAPE_METADATA_NAME }}
+  SHAPES_PATH: {{ quote .Values.testDataHandler.env.SHAPES_PATH }}
+  TIFF_PATH: {{ quote .Values.testDataHandler.env.TIFF_PATH }}
+  PV_WATCH_DIR: {{ quote .Values.testDataHandler.env.PV_WATCH_DIR }}
+{{- end -}}

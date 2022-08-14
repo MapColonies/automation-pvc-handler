@@ -1,0 +1,4 @@
+apiVersion: v1
+description: "Helm Chart to deploy the automation ingestion test app"
+name: discrete-ingestion-qa
+version: 0.1.0

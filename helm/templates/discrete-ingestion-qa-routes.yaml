@@ -1,0 +1,16 @@
+{{- if .Values.route.enabled -}}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ template "discrete-ingestion-qa.fullname" . }}-route
+  annotations:
+    haproxy.router.openshift.io/rewrite-target: /
+    haproxy.router.openshift.io/timeout: 60s
+spec:
+  path:  {{ .Values.route.testDataHandlerPath }}
+  to:
+    kind: Service
+    name: {{ template "discrete-ingestion-qa.fullname" . }}-test-data-handler
+  tls:
+    termination: edge
+{{- end -}}

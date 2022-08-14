@@ -1,0 +1,66 @@
+# ====================================================================================================
+# ====================================================================================================
+# ==================================Global Configurations=============================================
+# ====================================================================================================
+# ====================================================================================================
+environment: development
+# cloudProvider is provider where you are going to deploy map exporter, it could be: azure, minikube
+cloudProvider: azure
+imagePullPolicy: Always
+pullSecretName: "acr-registry"
+
+# ====================================================================================================
+# Ingress variables
+# ====================================================================================================
+
+#TODO: add ingress file
+ingress:
+  enabled: false
+
+route: #for openShift only
+  enabled: true
+  testDataHandlerPath: /
+
+
+# ====================================================================================================
+# Variables for discrete ingestion PVC
+# ====================================================================================================
+
+storage:
+  pvcName: local-sources-pvc
+  subPath: ingestion-source
+
+# ====================================================================================================
+# ====================================================================================================
+# ==================================Pods Configurations===============================================
+# ====================================================================================================
+# ====================================================================================================
+
+# ====================================================================================================
+# Variables for map test data handler
+# ====================================================================================================
+
+testDataHandler:
+  enabled: true
+  image: acrarolibotnonprod.azurecr.io/automation-pvc-handler
+  imageTag: '0.0.41'
+  env:
+    # TODO: ADD ENVS
+    GEOPACKAGE_FOLDER: geopackage
+    PV_ROOT_DIR: /layerSources
+    PV_BASE_DATA_DIR: test_data/1
+    PV_TEST_DIR_NAME: test_data_automation
+    SHAPE_METADATA_NAME: ShapeMetadata.shp
+    PV_WATCH_DIR: watch
+    SHAPES_PATH: Shapes
+    TIFF_PATH: tiff
+  NODE_PORT: 30020 #external port for local dev deployment
+  replicaCount: 1
+  resources:
+    enabled: false
+    requests:
+      memory: "1Gi"
+      cpu: "1"
+    limits:
+      memory: "2Gi"
+      cpu: "1"
