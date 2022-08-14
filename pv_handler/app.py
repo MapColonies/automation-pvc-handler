@@ -66,6 +66,18 @@ def delete_file_from_folder():
     return response
 
 
+@app.route('/readJsonFromFolder', methods=['GET'])
+def read_json_from_folder():
+    file_name = request.args.get('file')
+    full_path = os.path.join(config.PV_ROOT_DIR, config.UPDATE_GPKG, file_name)
+    try:
+        with open(full_path) as f:
+            json_data = json.load(f)
+    except FileNotFoundError:
+        raise "Error from getting json's data from the requested folder"
+    return json_data
+
+
 @app.route('/createMockFile', methods=['GET'])
 def create_mock_file():
     folder_name = request.args.get('folder')

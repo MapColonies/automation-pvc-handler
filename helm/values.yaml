@@ -47,6 +47,7 @@ testDataHandler:
   env:
     # TODO: ADD ENVS
     GEOPACKAGE_FOLDER: geopackage
+    UPDATE_GPKG: update_gpkg
     PV_ROOT_DIR: /layerSources
     PV_BASE_DATA_DIR: test_data/1
     PV_TEST_DIR_NAME: test_data_automation

@@ -2,6 +2,8 @@ from mc_automation_tools import common
 
 
 PV_ROOT_DIR = common.get_environment_variable("PV_ROOT_DIR", "/tmp/ingestion")
+UPDATE_GPKG = common.get_environment_variable("UPDATE_GPKG", "/update_gpkg")
+
 PV_WATCH_DIR = common.get_environment_variable("PV_WATCH_DIR", "watch")
 PV_BASE_DATA_DIR = common.get_environment_variable("PV_BASE_DATA_DIR", "1")
 PV_TEST_DIR_NAME = common.get_environment_variable("PV_TEST_DIR_NAME", "test_data_automation")
