@@ -66,16 +66,29 @@ def delete_file_from_folder():
     return response
 
 
-@app.route('/readJsonFromFolder', methods=['GET'])
+# @app.route('/readJsonFromFolder', methods=['GET'])
+# def read_json_from_folder():
+#     file_name = request.args.get('file')
+#     full_path = os.path.join(config.PV_ROOT_DIR, config.UPDATE_GPKG, file_name)
+#     try:
+#         with open(full_path) as f:
+#             json_data = json.load(f)
+#     except FileNotFoundError:
+#         raise "Error from getting json's data from the requested folder"
+#     return json_data
+
+
+@app.route('/readUpdateJsonFromFolder/', methods=['GET'])
 def read_json_from_folder():
     file_name = request.args.get('file')
-    full_path = os.path.join(config.PV_ROOT_DIR, config.UPDATE_GPKG, file_name)
+    print(file_name)
+    full_path = os.path.join(config.PV_ROOT_DIR, 'update_gpkg', f'{file_name}.json')
     try:
-        with open(full_path) as f:
-            json_data = json.load(f)
+        f = open(full_path)
+        _json = json.load(f)
     except FileNotFoundError:
-        raise "Error from getting json's data from the requested folder"
-    return json_data
+        raise "hara"
+    return _json
 
 
 @app.route('/createMockFile', methods=['GET'])
@@ -300,6 +313,11 @@ def generate_watch_dir():
 
     response = _helper_copy_request(source, dest)
     return response
+
+
+@app.route('/start')
+def start():
+    return 'started'
 
 
 @app.route('/api/docs')
