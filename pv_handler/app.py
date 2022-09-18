@@ -91,6 +91,7 @@ def read_json_from_folder():
     return _json
 
 
+
 @app.route('/createMockFile', methods=['GET'])
 def create_mock_file():
     folder_name = request.args.get('folder')
@@ -207,6 +208,7 @@ def validate_path():
     dest = os.path.join(root, config.PV_WATCH_DIR, dest)
     if folder_name_src is not None:
         dest = os.path.join(root, config.PV_WATCH_DIR, folder_name_src)
+
     response = _helper_path_validator(dest)
     return response
 
